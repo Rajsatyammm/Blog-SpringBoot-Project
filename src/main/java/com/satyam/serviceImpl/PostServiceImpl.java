@@ -1,5 +1,7 @@
 package com.satyam.serviceImpl;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,8 +52,8 @@ public class PostServiceImpl implements IPostService {
                 post.setCategory(category);
                 post.setUser(user);
                 post.setImageUrl("default.png");
-                // post.setAddedAt(Date.);
-                // post.setUpdatedAt(LocalDateTime.now());
+                post.setAddedAt(Date.valueOf(LocalDate.now()));
+                post.setUpdatedAt(Date.valueOf(LocalDate.now()));
                 Post createdPost = postRepository.save(post);
                 return "New Post created with id " + createdPost.getPostId();
         }
@@ -105,6 +107,7 @@ public class PostServiceImpl implements IPostService {
                 postRepository.findById(postDto.getPostId())
                                 .orElseThrow(() -> new CustomException("Post not found with id " + postDto.getPostId(),
                                                 "404", false));
+                postDto.setUpdatedAt(Date.valueOf(LocalDate.now()));
                 Post updatedPost = postRepository.save(modelMapper.map(postDto, Post.class));
                 return modelMapper.map(updatedPost, PostDto.class);
         }
