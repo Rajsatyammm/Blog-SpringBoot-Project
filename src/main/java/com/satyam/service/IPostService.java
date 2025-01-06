@@ -7,7 +7,7 @@ import com.satyam.utils.PostResponse;
 
 public interface IPostService {
 
-    String createPost(PostDto postDto, Integer userId, Integer categoryId);
+    String createPost(PostDto postDto, Integer userId, Integer categoryId, String imageUrl);
 
     PostDto getPostsById(Integer postId);
 

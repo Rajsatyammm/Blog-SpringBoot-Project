@@ -27,8 +27,9 @@ public class PostController {
 
     @PostMapping("/user/{userId}/category/{categoryId}/save")
     public ResponseEntity<String> createPost(@RequestBody PostDto postDto, @PathVariable Integer userId,
-            @PathVariable Integer categoryId) {
-        String message = postService.createPost(postDto, userId, categoryId);
+            @PathVariable Integer categoryId,
+            @RequestParam(name = "imageUrl", defaultValue = "default.png", required = false) String imageUrl) {
+        String message = postService.createPost(postDto, userId, categoryId, imageUrl);
         return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
 
