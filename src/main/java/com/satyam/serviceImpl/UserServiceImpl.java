@@ -1,7 +1,6 @@
-package com.satyam.service;
+package com.satyam.serviceImpl;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -15,6 +14,7 @@ import com.satyam.dto.UserDto;
 import com.satyam.exceptions.CustomException;
 import com.satyam.model.User;
 import com.satyam.repository.IUserRepository;
+import com.satyam.service.IUserService;
 
 @Service
 public class UserServiceImpl implements IUserService {
@@ -61,9 +61,6 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public String createUser(UserDto userDto) {
-        Optional<User> optional = userRepository.findById(userDto.getId());
-        if (optional.isPresent())
-            throw new CustomException("User already found by id " + userDto.getId(), "", false);
         User user = userRepository.save(modelMapper.map(userDto, User.class));
         return "New User created with id " + user.getId();
     }

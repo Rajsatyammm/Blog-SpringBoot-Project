@@ -1,8 +1,13 @@
 package com.satyam.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +18,8 @@ import com.satyam.dto.UserDto;
 import com.satyam.service.IUserService;
 import com.satyam.utils.ApiResponse;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -21,10 +28,29 @@ public class UserController {
     private IUserService userService;
 
     @PostMapping("/save")
-    public ResponseEntity<ApiResponse> getAllUser(@RequestBody UserDto user,
-            @RequestParam(required = false, value = "1") Integer pageNo,
-            @RequestParam(required = false, value = "5") Integer pageSize) {
+    public ResponseEntity<ApiResponse> createUser(@Valid @RequestBody UserDto user) {
         String message = userService.createUser(user);
-        return new ResponseEntity<>(new ApiResponse(message, 201, true), HttpStatus.CREATED);
+        ApiResponse response = new ApiResponse(message, 201, true);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/get/{id}")
+    public ResponseEntity<UserDto> getUserById(@PathVariable Integer id) {
+        UserDto userDto = userService.getUserById(id);
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/getAll")
+    public ResponseEntity<List<UserDto>> getAllUsers(
+            @RequestParam(name = "pageNo", required = false, defaultValue = "0") Integer pageNo,
+            @RequestParam(name = "pageSize", required = false, defaultValue = "5") Integer pageSize) {
+        List<UserDto> userDtos = userService.getAllUsers(pageNo, pageSize);
+        return new ResponseEntity<>(userDtos, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<ApiResponse> deleteUserById(@PathVariable Integer id) {
+        String message = userService.deleteUserById(id);
+        return new ResponseEntity<>(new ApiResponse(message, 200, true), HttpStatus.OK);
     }
 }
