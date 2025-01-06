@@ -15,4 +15,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new CustomException(e.getMessage(), e.getStatusCode().toString(), false),
                 HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<CustomException> handleAllOtherException(Exception e) {
+        return new ResponseEntity<>(
+                new CustomException(e.getMessage(), ((CustomException) e).getStatusCode().toString(), false),
+                HttpStatus.NOT_FOUND);
+    }
 }
