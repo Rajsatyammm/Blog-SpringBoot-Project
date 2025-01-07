@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.satyam.dto.CommentDto;
-import com.satyam.dto.PostDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,8 +17,8 @@ public class UserResponse {
     private String email;
 
     @JsonManagedReference
-    private List<PostDto> userPosts = new ArrayList<>();
+    private List<PostResponse> userPosts = new ArrayList<>();
 
     @JsonManagedReference
-    private List<CommentDto> comments = new ArrayList<>();
+    private List<CommentResponse> comments = new ArrayList<>();
 }

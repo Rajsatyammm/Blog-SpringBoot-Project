@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.satyam.dto.CommentDto;
 import com.satyam.service.ICommentService;
+import com.satyam.utils.CommentResponse;
 
 @RestController
 @RequestMapping("/api")
@@ -23,15 +24,15 @@ public class CommentController {
     private ICommentService commentService;
 
     @PostMapping("/user/{userId}/post/{postId}/save")
-    public ResponseEntity<CommentDto> addComment(@RequestBody CommentDto commentDto, @PathVariable Integer userId,
+    public ResponseEntity<CommentResponse> addComment(@RequestBody CommentDto commentDto, @PathVariable Integer userId,
             @PathVariable Integer postId) {
-        CommentDto savedComment = commentService.addComment(commentDto, userId, postId);
+        CommentResponse savedComment = commentService.addComment(commentDto, userId, postId);
         return new ResponseEntity<>(savedComment, HttpStatus.CREATED);
     }
 
     @GetMapping("/comments/post/{postId}")
-    public ResponseEntity<List<CommentDto>> getAllCommentsOnPost(@PathVariable Integer postId) {
-        List<CommentDto> commentsList = commentService.getAllCommentsOnPost(postId);
+    public ResponseEntity<List<CommentResponse>> getAllCommentsOnPost(@PathVariable Integer postId) {
+        List<CommentResponse> commentsList = commentService.getAllCommentsOnPost(postId);
         return new ResponseEntity<>(commentsList, HttpStatus.CREATED);
     }
 

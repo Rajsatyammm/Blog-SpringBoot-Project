@@ -1,8 +1,6 @@
 package com.satyam.utils;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.satyam.dto.PostDto;
-import com.satyam.dto.UserDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,8 +13,8 @@ public class CommentResponse {
     private String content;
 
     @JsonBackReference
-    private UserDto user;
+    private UserResponse user;
 
     @JsonBackReference
-    private PostDto post;
+    private PostResponse post;
 }
