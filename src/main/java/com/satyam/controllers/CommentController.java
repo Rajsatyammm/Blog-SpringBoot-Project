@@ -2,6 +2,7 @@ package com.satyam.controllers;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,7 @@ import com.satyam.service.ICommentService;
 @RequestMapping("/api")
 public class CommentController {
 
+    @Autowired
     private ICommentService commentService;
 
     @PostMapping("/user/{userId}/post/{postId}/save")

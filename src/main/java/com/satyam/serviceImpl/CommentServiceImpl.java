@@ -58,7 +58,8 @@ public class CommentServiceImpl implements ICommentService {
     @Override
     public String deleteComment(Integer commentId) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CustomException("Comment not found by id " + commentId, "404", false));
+                .orElseThrow(() -> new CustomException("Comment not found by id " + commentId, "404",
+                        false));
         commentRepository.delete(comment);
         return "Comment deleted with id " + commentId;
     }
