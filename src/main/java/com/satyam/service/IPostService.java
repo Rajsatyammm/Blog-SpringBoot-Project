@@ -3,24 +3,24 @@ package com.satyam.service;
 import java.util.List;
 
 import com.satyam.dto.PostDto;
-import com.satyam.utils.PostResponse;
+import com.satyam.utils.PostsResponse;
 
 public interface IPostService {
 
-    String createPost(PostDto postDto, Integer userId, Integer categoryId, String imageUrl);
+    PostsResponse createPost(PostDto postDto, Integer userId, Integer categoryId, String imageUrl);
 
-    PostDto getPostsById(Integer postId);
+    PostsResponse getPostsById(Integer postId);
 
-    List<PostDto> getAllPostsByUser(Integer userId);
+    List<PostsResponse> getAllPostsByUser(Integer userId);
 
-    List<PostDto> getAllPostsByCategory(Integer categoryId);
+    List<PostsResponse> getAllPostsByCategory(Integer categoryId);
 
-    PostResponse getAllPosts(Integer pageNo, Integer pageSize, String sortBy, Boolean asc);
+    PostsResponse getAllPosts(Integer pageNo, Integer pageSize, String sortBy, Boolean asc);
 
-    String deletePostById(Integer postId);
+    PostsResponse deletePostById(Integer postId);
 
-    PostDto updatePost(PostDto postDto);
+    PostsResponse updatePost(PostDto postDto);
 
-    List<PostDto> searchPostsByTitle(String title);
+    List<PostsResponse> searchPostsByTitle(String title);
 
 }

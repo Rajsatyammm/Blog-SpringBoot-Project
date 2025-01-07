@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.satyam.constants.AppConstants;
 import com.satyam.dto.PostDto;
 import com.satyam.service.IPostService;
-import com.satyam.utils.PostResponse;
+import com.satyam.utils.PostsResponse;
 
 @RestController
 @RequestMapping("/api")
@@ -26,30 +26,30 @@ public class PostController {
     private IPostService postService;
 
     @PostMapping("/user/{userId}/category/{categoryId}/save")
-    public ResponseEntity<String> createPost(@RequestBody PostDto postDto, @PathVariable Integer userId,
+    public ResponseEntity<PostsResponse> createPost(@RequestBody PostDto postDto, @PathVariable Integer userId,
             @PathVariable Integer categoryId,
             @RequestParam(name = "imageUrl", defaultValue = "default.png", required = false) String imageUrl) {
-        String message = postService.createPost(postDto, userId, categoryId, imageUrl);
-        return new ResponseEntity<>(message, HttpStatus.CREATED);
+        PostsResponse response = postService.createPost(postDto, userId, categoryId, imageUrl);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/posts/user/{userId}")
-    public ResponseEntity<List<PostDto>> getAllPostByUserId(@PathVariable Integer userId) {
+    public ResponseEntity<List<PostsResponse>> getAllPostByUserId(@PathVariable Integer userId) {
         return new ResponseEntity<>(postService.getAllPostsByUser(userId), HttpStatus.OK);
     }
 
     @GetMapping("/posts/category/{categoryId}")
-    public ResponseEntity<List<PostDto>> getAllPostByCategory(@PathVariable Integer categoryId) {
+    public ResponseEntity<List<PostsResponse>> getAllPostByCategory(@PathVariable Integer categoryId) {
         return new ResponseEntity<>(postService.getAllPostsByCategory(categoryId), HttpStatus.OK);
     }
 
     @GetMapping("/posts/{postId}")
-    public ResponseEntity<PostDto> getPostById(@PathVariable Integer postId) {
+    public ResponseEntity<PostsResponse> getPostById(@PathVariable Integer postId) {
         return new ResponseEntity<>(postService.getPostsById(postId), HttpStatus.OK);
     }
 
     @GetMapping("/posts/getAll")
-    public ResponseEntity<PostResponse> getAllPosts(
+    public ResponseEntity<PostsResponse> getAllPosts(
             @RequestParam(name = "pageNo", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNo,
             @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
             @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_BY, required = false) String sortBy,
@@ -58,7 +58,7 @@ public class PostController {
     }
 
     @GetMapping("/posts/search")
-    public ResponseEntity<List<PostDto>> searchPostByTitle(@RequestParam String query) {
+    public ResponseEntity<List<PostsResponse>> searchPostByTitle(@RequestParam String query) {
         return new ResponseEntity<>(postService.searchPostsByTitle(query), HttpStatus.OK);
     }
 

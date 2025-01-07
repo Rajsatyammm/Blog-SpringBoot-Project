@@ -1,9 +1,10 @@
 package com.satyam.utils;
 
-import java.util.ArrayList;
+import java.sql.Date;
 import java.util.List;
 
-import com.satyam.dto.PostDto;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,11 +14,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostResponse {
-    private List<PostDto> content = new ArrayList<>();
-    private Integer pageNo;
-    private Integer pageSize;
-    private Integer totalPage;
-    private Long totalElements;
-    private Boolean isLastPage;
-    private Boolean isFirstPage;
+    private String title;
+    private String content;
+    private String imageUrl;
+    private Date addedAt;
+    private Date updatedAt;
+
+    @JsonBackReference
+    private UserResponse user;
+
+    @JsonBackReference
+    private CategoryResponse category;
+
+    @JsonManagedReference
+    private List<CommentResponse> commentsList;
 }
