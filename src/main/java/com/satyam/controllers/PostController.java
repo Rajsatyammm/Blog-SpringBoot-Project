@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.satyam.constants.AppConstants;
 import com.satyam.dto.PostDto;
 import com.satyam.service.IPostService;
+import com.satyam.utils.PostResponse;
 import com.satyam.utils.PostsResponse;
 
 @RestController
@@ -26,25 +27,25 @@ public class PostController {
     private IPostService postService;
 
     @PostMapping("/user/{userId}/category/{categoryId}/save")
-    public ResponseEntity<PostsResponse> createPost(@RequestBody PostDto postDto, @PathVariable Integer userId,
+    public ResponseEntity<PostResponse> createPost(@RequestBody PostDto postDto, @PathVariable Integer userId,
             @PathVariable Integer categoryId,
             @RequestParam(name = "imageUrl", defaultValue = "default.png", required = false) String imageUrl) {
-        PostsResponse response = postService.createPost(postDto, userId, categoryId, imageUrl);
+        PostResponse response = postService.createPost(postDto, userId, categoryId, imageUrl);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/posts/user/{userId}")
-    public ResponseEntity<List<PostsResponse>> getAllPostByUserId(@PathVariable Integer userId) {
+    public ResponseEntity<List<PostResponse>> getAllPostByUserId(@PathVariable Integer userId) {
         return new ResponseEntity<>(postService.getAllPostsByUser(userId), HttpStatus.OK);
     }
 
     @GetMapping("/posts/category/{categoryId}")
-    public ResponseEntity<List<PostsResponse>> getAllPostByCategory(@PathVariable Integer categoryId) {
+    public ResponseEntity<List<PostResponse>> getAllPostByCategory(@PathVariable Integer categoryId) {
         return new ResponseEntity<>(postService.getAllPostsByCategory(categoryId), HttpStatus.OK);
     }
 
     @GetMapping("/posts/{postId}")
-    public ResponseEntity<PostsResponse> getPostById(@PathVariable Integer postId) {
+    public ResponseEntity<PostResponse> getPostById(@PathVariable Integer postId) {
         return new ResponseEntity<>(postService.getPostsById(postId), HttpStatus.OK);
     }
 
@@ -58,7 +59,7 @@ public class PostController {
     }
 
     @GetMapping("/posts/search")
-    public ResponseEntity<List<PostsResponse>> searchPostByTitle(@RequestParam String query) {
+    public ResponseEntity<List<PostResponse>> searchPostByTitle(@RequestParam String query) {
         return new ResponseEntity<>(postService.searchPostsByTitle(query), HttpStatus.OK);
     }
 

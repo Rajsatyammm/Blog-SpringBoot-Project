@@ -23,6 +23,7 @@ import com.satyam.repository.ICategoryRepository;
 import com.satyam.repository.IPostRepository;
 import com.satyam.repository.IUserRepository;
 import com.satyam.service.IPostService;
+import com.satyam.utils.PostResponse;
 import com.satyam.utils.PostsResponse;
 
 @Service
@@ -41,9 +42,10 @@ public class PostServiceImpl implements IPostService {
     private ModelMapper modelMapper;
 
     @Override
-    public PostsResponse createPost(PostDto postDto, Integer userId, Integer categoryId, String imageUrl) {
+    public PostResponse createPost(PostDto postDto, Integer userId, Integer categoryId, String imageUrl) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException("User not found with id " + userId, "404", false));
+                .orElseThrow(() -> new CustomException("User not found with id " + userId, "404",
+                        false));
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CustomException("Category not found with id " + categoryId,
                         "404", false));
@@ -54,53 +56,63 @@ public class PostServiceImpl implements IPostService {
         post.setAddedAt(Date.valueOf(LocalDate.now()));
         post.setUpdatedAt(Date.valueOf(LocalDate.now()));
         Post createdPost = postRepository.save(post);
-        return modelMapper.map(createdPost, PostsResponse.class);
+        System.out.println("*****************************");
+        System.out.println("*****************************");
+        System.out.println("*****************************");
+
+        System.out.println("createdPost" + " content " + createdPost.getContent());
+        return modelMapper.map(createdPost, PostResponse.class);
     }
 
     @Override
-    public PostsResponse getPostsById(Integer postId) {
+    public PostResponse getPostsById(Integer postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new CustomException("Post not found with id " + postId, "404", false));
-        return modelMapper.map(post, PostsResponse.class);
+                .orElseThrow(() -> new CustomException("Post not found with id " + postId, "404",
+                        false));
+        return modelMapper.map(post, PostResponse.class);
     }
 
     @Override
-    public List<PostsResponse> getAllPostsByUser(Integer userId) {
+    public List<PostResponse> getAllPostsByUser(Integer userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException("User not found with id " + userId, "404", false));
+                .orElseThrow(() -> new CustomException("User not found with id " + userId, "404",
+                        false));
         return user
                 .getUserPosts()
                 .stream()
-                .map(post -> modelMapper.map(post, PostsResponse.class))
+                .map(post -> modelMapper.map(post, PostResponse.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<PostsResponse> getAllPostsByCategory(Integer categoryId) {
+    public List<PostResponse> getAllPostsByCategory(Integer categoryId) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CustomException("User not found with id " + categoryId, "404", false));
+                .orElseThrow(() -> new CustomException("User not found with id " + categoryId, "404",
+                        false));
         return category
                 .getPosts()
                 .stream()
-                .map(post -> modelMapper.map(post, PostsResponse.class))
+                .map(post -> modelMapper.map(post, PostResponse.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public PostsResponse deletePostById(Integer postId) {
+    public PostResponse deletePostById(Integer postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new CustomException("Post not found with id " + postId, "404", false));
+                .orElseThrow(() -> new CustomException("Post not found with id " + postId, "404",
+                        false));
         postRepository.delete(post);
-        return modelMapper.map(post, PostsResponse.class);
+        return modelMapper.map(post, PostResponse.class);
     }
 
     @Override
-    public PostsResponse updatePost(PostDto postDto) {
+    public PostResponse updatePost(PostDto postDto) {
         postRepository.findById(postDto.getPostId())
-                .orElseThrow(() -> new CustomException("Post not found with id " + postDto.getPostId(), "404", false));
+                .orElseThrow(() -> new CustomException("Post not found with id " + postDto.getPostId(),
+                        "404", false));
         postDto.setUpdatedAt(Date.valueOf(LocalDate.now()));
         Post updatedPost = postRepository.save(modelMapper.map(postDto, Post.class));
-        return modelMapper.map(updatedPost, PostsResponse.class);
+        return modelMapper.map(updatedPost, PostResponse.class);
     }
 
     @Override
@@ -125,11 +137,11 @@ public class PostServiceImpl implements IPostService {
     }
 
     @Override
-    public List<PostsResponse> searchPostsByTitle(String title) {
+    public List<PostResponse> searchPostsByTitle(String title) {
         List<Post> posts = postRepository.findByTitleContaining(title);
         return posts
                 .stream()
-                .map(post -> modelMapper.map(post, PostsResponse.class))
+                .map(post -> modelMapper.map(post, PostResponse.class))
                 .collect(Collectors.toList());
     }
 

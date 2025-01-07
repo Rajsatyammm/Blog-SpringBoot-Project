@@ -1,6 +1,7 @@
 package com.satyam.dto;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.validation.constraints.NotEmpty;
@@ -24,5 +25,5 @@ public class PostDto {
 
     private UserDto user;
     private CategoryDto category;
-    private List<CommentDto> commentsList;
+    private List<CommentDto> commentsList = new ArrayList<>();
 }
