@@ -1,11 +1,11 @@
 package com.satyam.serviceImpl;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.satyam.dto.CategoryDto;
@@ -26,10 +26,10 @@ public class CategoryServiceImpl implements ICategoryService {
 
     @Override
     public CategoryResponse getCategoryById(Integer id) {
-        Optional<Category> optional = categoryRepository.findById(id);
-        if (optional.isPresent())
-            return modelMapper.map(optional.get(), CategoryResponse.class);
-        throw new CustomException("Category not found by Id " + id, "404", false);
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(
+                        () -> new CustomException("Category not found with id " + id, HttpStatus.NOT_FOUND, false));
+        return modelMapper.map(category, CategoryResponse.class);
     }
 
     @Override
@@ -44,7 +44,8 @@ public class CategoryServiceImpl implements ICategoryService {
     @Override
     public CategoryResponse deleteCategoryById(Integer id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new CustomException("Category not found with id " + id, "404", false));
+                .orElseThrow(
+                        () -> new CustomException("Category not found with id " + id, HttpStatus.NOT_FOUND, false));
         categoryRepository.delete(category);
         return modelMapper.map(category, CategoryResponse.class);
     }
@@ -53,7 +54,7 @@ public class CategoryServiceImpl implements ICategoryService {
     public CategoryResponse updateCategory(CategoryDto categoryDto) {
         categoryRepository.findById(categoryDto.getCategoryId())
                 .orElseThrow(() -> new CustomException("Category not found with id " + categoryDto.getCategoryId(),
-                        "404", false));
+                        HttpStatus.NOT_FOUND, false));
         Category updatedCategory = categoryRepository.save(modelMapper.map(categoryDto, Category.class));
         return modelMapper.map(updatedCategory, CategoryResponse.class);
     }

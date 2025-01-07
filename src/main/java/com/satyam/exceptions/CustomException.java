@@ -1,5 +1,7 @@
 package com.satyam.exceptions;
 
+import org.springframework.http.HttpStatus;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,10 +11,12 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CustomException extends RuntimeException {
     private String message;
-    private String statusCode;
+    private HttpStatus statusCode;
     private Boolean success;
 
-    public CustomException(String message, String statusCode, Boolean success) {
-        super(message + "statusCode " + statusCode + " success " + success);
+    public CustomException(String message, HttpStatus statusCode, Boolean success) {
+        super(message);
+        this.statusCode = statusCode;
+        this.success = success;
     }
 }

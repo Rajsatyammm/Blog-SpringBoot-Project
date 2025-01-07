@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.satyam.dto.CommentDto;
@@ -36,9 +37,9 @@ public class CommentServiceImpl implements ICommentService {
     @Override
     public CommentResponse addComment(CommentDto commentDto, Integer userId, Integer postId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException("User not found by id " + userId, "404", false));
+                .orElseThrow(() -> new CustomException("User not found by id " + userId, HttpStatus.NOT_FOUND, false));
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new CustomException("Post not found by id " + postId, "404", false));
+                .orElseThrow(() -> new CustomException("Post not found by id " + postId, HttpStatus.NOT_FOUND, false));
         Comment comment = modelMapper.map(commentDto, Comment.class);
         comment.setUser(user);
         comment.setPost(post);
@@ -49,7 +50,7 @@ public class CommentServiceImpl implements ICommentService {
     @Override
     public List<CommentResponse> getAllCommentsOnPost(Integer postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new CustomException("Post not found by id " + postId, "404", false));
+                .orElseThrow(() -> new CustomException("Post not found by id " + postId, HttpStatus.NOT_FOUND, false));
         return post.getCommentsList()
                 .stream()
                 .map(comment -> modelMapper.map(comment, CommentResponse.class))
@@ -58,9 +59,10 @@ public class CommentServiceImpl implements ICommentService {
 
     @Override
     public CommentResponse deleteComment(Integer commentId) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CustomException("Comment not found by id " + commentId, "404",
-                        false));
+        Comment comment = commentRepository
+                .findById(commentId)
+                .orElseThrow(
+                        () -> new CustomException("Comment not found by id " + commentId, HttpStatus.NOT_FOUND, false));
         commentRepository.delete(comment);
         return modelMapper.map(comment, CommentResponse.class);
     }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.satyam.dto.UserDto;
@@ -29,7 +30,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserResponse getUserById(Integer id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new CustomException("User not found but Id " + id, "404", false));
+                .orElseThrow(() -> new CustomException("User not found but Id " + id, HttpStatus.NOT_FOUND, false));
         return modelMapper.map(user, UserResponse.class);
     }
 
@@ -47,7 +48,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserResponse deleteUserById(Integer id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new CustomException("User not found but Id " + id, "404", false));
+                .orElseThrow(() -> new CustomException("User not found but Id " + id, HttpStatus.NOT_FOUND, false));
         userRepository.delete(user);
         return modelMapper.map(user, UserResponse.class);
     }
@@ -55,7 +56,8 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserResponse updateUser(UserDto userDto) {
         userRepository.findById(userDto.getId())
-                .orElseThrow(() -> new CustomException("User not found but Id " + userDto.getId(), "404", false));
+                .orElseThrow(() -> new CustomException("User not found but Id " + userDto.getId(), HttpStatus.NOT_FOUND,
+                        false));
         User user = userRepository.save(modelMapper.map(userDto, User.class));
         return modelMapper.map(user, UserResponse.class);
     }

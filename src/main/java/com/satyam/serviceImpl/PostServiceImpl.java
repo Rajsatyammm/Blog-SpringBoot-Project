@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.satyam.dto.PostDto;
@@ -44,11 +45,11 @@ public class PostServiceImpl implements IPostService {
     @Override
     public PostResponse createPost(PostDto postDto, Integer userId, Integer categoryId, String imageUrl) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException("User not found with id " + userId, "404",
+                .orElseThrow(() -> new CustomException("User not found with id " + userId, HttpStatus.NOT_FOUND,
                         false));
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CustomException("Category not found with id " + categoryId,
-                        "404", false));
+                        HttpStatus.NOT_FOUND, false));
         Post post = modelMapper.map(postDto, Post.class);
         post.setCategory(category);
         post.setUser(user);
@@ -62,7 +63,8 @@ public class PostServiceImpl implements IPostService {
     @Override
     public PostResponse getPostsById(Integer postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new CustomException("Post not found with id " + postId, "404",
+                .orElseThrow(() -> new CustomException("Post not found with id " + postId,
+                        HttpStatus.NOT_FOUND,
                         false));
         return modelMapper.map(post, PostResponse.class);
     }
@@ -70,7 +72,8 @@ public class PostServiceImpl implements IPostService {
     @Override
     public List<PostResponse> getAllPostsByUser(Integer userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException("User not found with id " + userId, "404",
+                .orElseThrow(() -> new CustomException("User not found with id " + userId,
+                        HttpStatus.NOT_FOUND,
                         false));
         return user
                 .getUserPosts()
@@ -82,7 +85,7 @@ public class PostServiceImpl implements IPostService {
     @Override
     public List<PostResponse> getAllPostsByCategory(Integer categoryId) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CustomException("User not found with id " + categoryId, "404",
+                .orElseThrow(() -> new CustomException("User not found with id " + categoryId, HttpStatus.NOT_FOUND,
                         false));
         return category
                 .getPosts()
@@ -94,7 +97,7 @@ public class PostServiceImpl implements IPostService {
     @Override
     public PostResponse deletePostById(Integer postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new CustomException("Post not found with id " + postId, "404",
+                .orElseThrow(() -> new CustomException("Post not found with id " + postId, HttpStatus.NOT_FOUND,
                         false));
         postRepository.delete(post);
         return modelMapper.map(post, PostResponse.class);
@@ -104,7 +107,7 @@ public class PostServiceImpl implements IPostService {
     public PostResponse updatePost(PostDto postDto) {
         postRepository.findById(postDto.getPostId())
                 .orElseThrow(() -> new CustomException("Post not found with id " + postDto.getPostId(),
-                        "404", false));
+                        HttpStatus.NOT_FOUND, false));
         postDto.setUpdatedAt(Date.valueOf(LocalDate.now()));
         Post updatedPost = postRepository.save(modelMapper.map(postDto, Post.class));
         return modelMapper.map(updatedPost, PostResponse.class);
