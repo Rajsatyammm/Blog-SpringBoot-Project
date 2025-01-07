@@ -22,5 +22,8 @@ public class UserDto {
     @NotEmpty
     @Size(min = 6, max = 10, message = "password must be min 6 and max 10 char")
     private String password;
+
     private List<PostDto> userPosts = new ArrayList<>();
+
+    private List<CommentDto> comments = new ArrayList<>();
 }

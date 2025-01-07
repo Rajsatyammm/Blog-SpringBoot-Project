@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.satyam.dto.UserDto;
 import com.satyam.service.IUserService;
-import com.satyam.utils.ApiResponse;
+import com.satyam.utils.UserResponse;
 
 import jakarta.validation.Valid;
 
@@ -28,29 +28,28 @@ public class UserController {
     private IUserService userService;
 
     @PostMapping("/save")
-    public ResponseEntity<ApiResponse> createUser(@Valid @RequestBody UserDto user) {
-        String message = userService.createUser(user);
-        ApiResponse response = new ApiResponse(message, 201, true);
+    public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserDto user) {
+        UserResponse response = userService.createUser(user);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable Integer id) {
-        UserDto userDto = userService.getUserById(id);
-        return new ResponseEntity<>(userDto, HttpStatus.OK);
+    public ResponseEntity<UserResponse> getUserById(@PathVariable Integer id) {
+        UserResponse userResponse = userService.getUserById(id);
+        return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<UserDto>> getAllUsers(
+    public ResponseEntity<List<UserResponse>> getAllUsers(
             @RequestParam(name = "pageNo", required = false, defaultValue = "0") Integer pageNo,
             @RequestParam(name = "pageSize", required = false, defaultValue = "5") Integer pageSize) {
-        List<UserDto> userDtos = userService.getAllUsers(pageNo, pageSize);
-        return new ResponseEntity<>(userDtos, HttpStatus.OK);
+        List<UserResponse> users = userService.getAllUsers(pageNo, pageSize);
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<ApiResponse> deleteUserById(@PathVariable Integer id) {
-        String message = userService.deleteUserById(id);
-        return new ResponseEntity<>(new ApiResponse(message, 200, true), HttpStatus.OK);
+    public ResponseEntity<UserResponse> deleteUserById(@PathVariable Integer id) {
+        UserResponse response = userService.deleteUserById(id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

@@ -3,16 +3,17 @@ package com.satyam.service;
 import java.util.List;
 
 import com.satyam.dto.UserDto;
+import com.satyam.utils.UserResponse;
 
 public interface IUserService {
 
-    UserDto getUserById(Integer id);
+    UserResponse getUserById(Integer id);
 
-    List<UserDto> getAllUsers(Integer pageNo, Integer maxPage);
+    List<UserResponse> getAllUsers(Integer pageNo, Integer maxPage);
 
-    String deleteUserById(Integer id);
+    UserResponse deleteUserById(Integer id);
 
-    UserDto updateUser(UserDto user);
+    UserResponse updateUser(UserDto user);
 
-    String createUser(UserDto user);
+    UserResponse createUser(UserDto user);
 }
