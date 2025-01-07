@@ -16,6 +16,7 @@ import com.satyam.repository.ICommentRepository;
 import com.satyam.repository.IPostRepository;
 import com.satyam.repository.IUserRepository;
 import com.satyam.service.ICommentService;
+import com.satyam.utils.CommentResponse;
 
 @Service
 public class CommentServiceImpl implements ICommentService {
@@ -33,7 +34,7 @@ public class CommentServiceImpl implements ICommentService {
     private ModelMapper modelMapper;
 
     @Override
-    public CommentDto addComment(CommentDto commentDto, Integer userId, Integer postId) {
+    public CommentResponse addComment(CommentDto commentDto, Integer userId, Integer postId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException("User not found by id " + userId, "404", false));
         Post post = postRepository.findById(postId)
@@ -42,26 +43,26 @@ public class CommentServiceImpl implements ICommentService {
         comment.setUser(user);
         comment.setPost(post);
         Comment savedComment = commentRepository.save(comment);
-        return modelMapper.map(savedComment, CommentDto.class);
+        return modelMapper.map(savedComment, CommentResponse.class);
     }
 
     @Override
-    public List<CommentDto> getAllCommentsOnPost(Integer postId) {
+    public List<CommentResponse> getAllCommentsOnPost(Integer postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomException("Post not found by id " + postId, "404", false));
         return post.getCommentsList()
                 .stream()
-                .map(comment -> modelMapper.map(comment, CommentDto.class))
+                .map(comment -> modelMapper.map(comment, CommentResponse.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public String deleteComment(Integer commentId) {
+    public CommentResponse deleteComment(Integer commentId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CustomException("Comment not found by id " + commentId, "404",
                         false));
         commentRepository.delete(comment);
-        return "Comment deleted with id " + commentId;
+        return modelMapper.map(comment, CommentResponse.class);
     }
 
 }
