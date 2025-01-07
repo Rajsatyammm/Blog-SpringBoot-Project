@@ -3,15 +3,16 @@ package com.satyam.service;
 import java.util.List;
 
 import com.satyam.dto.CategoryDto;
+import com.satyam.utils.CategoryResponse;
 
 public interface ICategoryService {
-    CategoryDto getCategoryById(Integer id);
+    CategoryResponse getCategoryById(Integer id);
 
-    List<CategoryDto> getAllCategory();
+    List<CategoryResponse> getAllCategory();
 
-    String deleteCategoryById(Integer id);
+    CategoryResponse deleteCategoryById(Integer id);
 
-    CategoryDto updateCategory(CategoryDto categoryDto);
+    CategoryResponse updateCategory(CategoryDto categoryDto);
 
-    String createCategory(CategoryDto categoryDto);
+    CategoryResponse createCategory(CategoryDto categoryDto);
 }

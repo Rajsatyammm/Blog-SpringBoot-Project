@@ -13,6 +13,7 @@ import com.satyam.exceptions.CustomException;
 import com.satyam.model.Category;
 import com.satyam.repository.ICategoryRepository;
 import com.satyam.service.ICategoryService;
+import com.satyam.utils.CategoryResponse;
 
 @Service
 public class CategoryServiceImpl implements ICategoryService {
@@ -24,45 +25,42 @@ public class CategoryServiceImpl implements ICategoryService {
     private ModelMapper modelMapper;
 
     @Override
-    public CategoryDto getCategoryById(Integer id) {
+    public CategoryResponse getCategoryById(Integer id) {
         Optional<Category> optional = categoryRepository.findById(id);
         if (optional.isPresent())
-            return modelMapper.map(optional.get(), CategoryDto.class);
+            return modelMapper.map(optional.get(), CategoryResponse.class);
         throw new CustomException("Category not found by Id " + id, "404", false);
     }
 
     @Override
-    public List<CategoryDto> getAllCategory() {
+    public List<CategoryResponse> getAllCategory() {
         return categoryRepository
                 .findAll()
                 .stream()
-                .map((category) -> modelMapper.map(category, CategoryDto.class))
+                .map((category) -> modelMapper.map(category, CategoryResponse.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public String deleteCategoryById(Integer id) {
-        Optional<Category> optional = categoryRepository.findById(id);
-        if (optional.isPresent()) {
-            categoryRepository.delete(optional.get());
-            return "Category deleted with id " + optional.get().getCategoryId();
-        }
-        throw new CustomException("Category not found by Id " + id, "404", false);
+    public CategoryResponse deleteCategoryById(Integer id) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new CustomException("Category not found with id " + id, "404", false));
+        categoryRepository.delete(category);
+        return modelMapper.map(category, CategoryResponse.class);
     }
 
     @Override
-    public CategoryDto updateCategory(CategoryDto categoryDto) {
-        Optional<Category> optional = categoryRepository.findById(categoryDto.getCategoryId());
-        if (optional.isPresent()) {
-            Category updatedCategory = categoryRepository.save(modelMapper.map(categoryDto, Category.class));
-            return modelMapper.map(updatedCategory, CategoryDto.class);
-        }
-        throw new CustomException("Category not found by Id " + categoryDto.getCategoryId(), "404", false);
+    public CategoryResponse updateCategory(CategoryDto categoryDto) {
+        categoryRepository.findById(categoryDto.getCategoryId())
+                .orElseThrow(() -> new CustomException("Category not found with id " + categoryDto.getCategoryId(),
+                        "404", false));
+        Category updatedCategory = categoryRepository.save(modelMapper.map(categoryDto, Category.class));
+        return modelMapper.map(updatedCategory, CategoryResponse.class);
     }
 
     @Override
-    public String createCategory(CategoryDto categoryDto) {
+    public CategoryResponse createCategory(CategoryDto categoryDto) {
         Category savedCategory = categoryRepository.save(modelMapper.map(categoryDto, Category.class));
-        return "New Category created with id " + savedCategory.getCategoryId();
+        return modelMapper.map(savedCategory, CategoryResponse.class);
     }
 }

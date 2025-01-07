@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.satyam.dto.CategoryDto;
 import com.satyam.service.ICategoryService;
-import com.satyam.utils.ApiResponse;
+import com.satyam.utils.CategoryResponse;
 
 import jakarta.validation.Valid;
 
@@ -27,26 +27,25 @@ public class CategoryController {
     private ICategoryService categoryService;
 
     @PostMapping("/save")
-    public ResponseEntity<ApiResponse> createUser(@Valid @RequestBody CategoryDto categoryDto) {
-        String message = categoryService.createCategory(categoryDto);
-        ApiResponse response = new ApiResponse(message, 201, true);
+    public ResponseEntity<CategoryResponse> createUser(@Valid @RequestBody CategoryDto categoryDto) {
+        CategoryResponse response = categoryService.createCategory(categoryDto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<CategoryDto> getUserById(@PathVariable Integer id) {
-        CategoryDto categoryDto = categoryService.getCategoryById(id);
-        return new ResponseEntity<>(categoryDto, HttpStatus.OK);
+    public ResponseEntity<CategoryResponse> getUserById(@PathVariable Integer id) {
+        CategoryResponse response = categoryService.getCategoryById(id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<CategoryDto>> getAllUsers() {
+    public ResponseEntity<List<CategoryResponse>> getAllUsers() {
         return new ResponseEntity<>(categoryService.getAllCategory(), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<ApiResponse> deleteUserById(@PathVariable Integer id) {
-        String message = categoryService.deleteCategoryById(id);
-        return new ResponseEntity<>(new ApiResponse(message, 200, true), HttpStatus.OK);
+    public ResponseEntity<CategoryResponse> deleteUserById(@PathVariable Integer id) {
+        CategoryResponse response = categoryService.deleteCategoryById(id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
