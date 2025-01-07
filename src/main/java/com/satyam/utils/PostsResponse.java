@@ -3,8 +3,6 @@ package com.satyam.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.satyam.dto.PostDto;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostsResponse {
-    private List<PostDto> content = new ArrayList<>();
+    private List<PostResponse> content = new ArrayList<>();
     private Integer pageNo;
     private Integer pageSize;
     private Integer totalPage;

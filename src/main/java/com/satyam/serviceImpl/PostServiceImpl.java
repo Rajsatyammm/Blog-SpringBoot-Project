@@ -56,11 +56,6 @@ public class PostServiceImpl implements IPostService {
         post.setAddedAt(Date.valueOf(LocalDate.now()));
         post.setUpdatedAt(Date.valueOf(LocalDate.now()));
         Post createdPost = postRepository.save(post);
-        System.out.println("*****************************");
-        System.out.println("*****************************");
-        System.out.println("*****************************");
-
-        System.out.println("createdPost" + " content " + createdPost.getContent());
         return modelMapper.map(createdPost, PostResponse.class);
     }
 
@@ -121,12 +116,12 @@ public class PostServiceImpl implements IPostService {
         Sort sort = asc ? Sort.by(Direction.ASC, sortBy) : Sort.by(Direction.DESC, sortBy);
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
         Page<Post> page = postRepository.findAll(pageable);
-        List<PostDto> postDtos = page.getContent()
+        List<PostResponse> response = page.getContent()
                 .stream()
-                .map(post -> modelMapper.map(post, PostDto.class))
+                .map(post -> modelMapper.map(post, PostResponse.class))
                 .collect(Collectors.toList());
         PostsResponse postResponse = new PostsResponse();
-        postResponse.setContent(postDtos);
+        postResponse.setContent(response);
         postResponse.setPageNo(page.getNumber());
         postResponse.setPageSize(page.getSize());
         postResponse.setTotalPage(page.getTotalPages());
