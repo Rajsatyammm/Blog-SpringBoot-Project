@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CommentResponse {
+    private Integer commentId;
     private String content;
 
     @JsonBackReference
