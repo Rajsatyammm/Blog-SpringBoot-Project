@@ -6,14 +6,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
-public class BlogProjectApplication {
+public class BlogAppApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BlogProjectApplication.class, args);
+		SpringApplication.run(BlogAppApplication.class, args);
 	}
 
 	@Bean
-	public static ModelMapper getModelMapper() {
+	public ModelMapper getModelMapper() {
 		return new ModelMapper();
 	}
+
 }
