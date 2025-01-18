@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.satyam.constants.AppConstants;
 import com.satyam.dto.UserDto;
 import com.satyam.service.IUserService;
 import com.satyam.utils.UserResponse;
@@ -41,8 +42,8 @@ public class UserController {
 
     @GetMapping("/getAll")
     public ResponseEntity<List<UserResponse>> getAllUsers(
-            @RequestParam(name = "pageNo", required = false, defaultValue = "0") Integer pageNo,
-            @RequestParam(name = "pageSize", required = false, defaultValue = "5") Integer pageSize) {
+            @RequestParam(required = false, defaultValue = AppConstants.PAGE_NUMBER) Integer pageNo,
+            @RequestParam(required = false, defaultValue = AppConstants.PAGE_SIZE) Integer pageSize) {
         List<UserResponse> users = userService.getAllUsers(pageNo, pageSize);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
