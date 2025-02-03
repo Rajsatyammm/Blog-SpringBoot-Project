@@ -47,7 +47,7 @@ public class User implements UserDetails {
     @JsonManagedReference
     private List<Comment> comments;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Role> roles;
 
     @Override
