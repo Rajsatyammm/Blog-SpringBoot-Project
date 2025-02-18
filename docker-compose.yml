@@ -1,0 +1,22 @@
+services:
+  blog:
+    image: rajsatyammm/blog-app
+    ports:
+      - 9999:9999
+    depends_on:
+      - mysql
+    networks:
+      - blog-app
+
+  mysql:
+    image: mysql:8
+    # ports:
+      # - 3307:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+    networks:
+      - blog-app
+
+networks:
+  blog-app:
+    driver: bridge
