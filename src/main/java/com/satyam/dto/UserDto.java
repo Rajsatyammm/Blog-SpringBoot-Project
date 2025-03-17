@@ -3,6 +3,7 @@ package com.satyam.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -23,7 +24,9 @@ public class UserDto {
     @Size(min = 6, max = 10, message = "password must be min 6 and max 10 char")
     private String password;
 
+    @JsonManagedReference
     private List<PostDto> userPosts = new ArrayList<>();
 
+    @JsonManagedReference
     private List<CommentDto> comments = new ArrayList<>();
 }

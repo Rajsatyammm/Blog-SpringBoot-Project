@@ -1,18 +1,16 @@
 package com.satyam.service;
 
-import java.util.List;
-
 import com.satyam.dto.CategoryDto;
-import com.satyam.utils.CategoryResponse;
+import com.satyam.utils.ApiResponse;
 
 public interface ICategoryService {
-    CategoryResponse getCategoryById(Integer id);
+    ApiResponse getCategoryById(Integer id);
 
-    List<CategoryResponse> getAllCategory();
+    ApiResponse getAllCategory();
 
-    CategoryResponse deleteCategoryById(Integer id);
+    ApiResponse deleteCategoryById(Integer id);
 
-    CategoryResponse updateCategory(CategoryDto categoryDto);
+    ApiResponse updateCategory(CategoryDto categoryDto);
 
-    CategoryResponse createCategory(CategoryDto categoryDto);
+    ApiResponse createCategory(CategoryDto categoryDto);
 }

@@ -1,19 +1,17 @@
 package com.satyam.service;
 
-import java.util.List;
-
 import com.satyam.dto.UserDto;
-import com.satyam.utils.UserResponse;
+import com.satyam.utils.ApiResponse;
 
 public interface IUserService {
 
-    UserResponse getUserById(Integer id);
+    ApiResponse getUserById(Integer id);
 
-    List<UserResponse> getAllUsers(Integer pageNo, Integer maxPage);
+    ApiResponse getAllUsers(Integer pageNo, Integer maxPage);
 
-    UserResponse deleteUserById(Integer id);
+    ApiResponse deleteUserById(Integer id);
 
-    UserResponse updateUser(UserDto user);
+    ApiResponse updateUser(UserDto user);
 
-    UserResponse createUser(UserDto user);
+    ApiResponse createUser(UserDto user);
 }

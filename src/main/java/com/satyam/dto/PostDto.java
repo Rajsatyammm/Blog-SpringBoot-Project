@@ -4,6 +4,8 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -23,7 +25,12 @@ public class PostDto {
     @Size(max = 10000, message = "max length of content is 10000")
     private String content;
 
+    @JsonBackReference
     private UserDto user;
+
+    @JsonManagedReference
     private CategoryDto category;
+
+    @JsonManagedReference
     private List<CommentDto> commentsList = new ArrayList<>();
 }

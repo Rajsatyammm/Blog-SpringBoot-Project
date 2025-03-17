@@ -1,14 +1,12 @@
 package com.satyam.service;
 
-import java.util.List;
-
 import com.satyam.dto.CommentDto;
-import com.satyam.utils.CommentResponse;
+import com.satyam.utils.ApiResponse;
 
 public interface ICommentService {
-    CommentResponse addComment(CommentDto comment, Integer userId, Integer postId);
+    ApiResponse addComment(CommentDto comment, Integer userId, Integer postId);
 
-    List<CommentResponse> getAllCommentsOnPost(Integer postId);
+    ApiResponse getAllCommentsOnPost(Integer postId);
 
-    CommentResponse deleteComment(Integer commentId);
+    ApiResponse deleteComment(Integer commentId);
 }

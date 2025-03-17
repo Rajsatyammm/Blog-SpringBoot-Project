@@ -13,12 +13,12 @@ public class MainController {
     
     @GetMapping("/")
     public ResponseEntity<ApiResponse> getIndex() {
-        return new ResponseEntity<ApiResponse>(new ApiResponse("Everything is alright!!", 200, true), HttpStatus.OK);
+        return new ResponseEntity<>(new ApiResponse("Everything is alright!!", 200, true, null), HttpStatus.OK);
     }
 
     @GetMapping("/health")
     public ResponseEntity<ApiResponse> healthCheck() {
-        return new ResponseEntity<ApiResponse>(new ApiResponse("server is up and running", 200, true), HttpStatus.OK);
+        return new ResponseEntity<>(new ApiResponse("server is up and running", 200, true, null), HttpStatus.OK);
     }
     
 }

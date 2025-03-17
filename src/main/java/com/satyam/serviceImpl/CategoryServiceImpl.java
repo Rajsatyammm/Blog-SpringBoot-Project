@@ -1,8 +1,6 @@
 package com.satyam.serviceImpl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.satyam.utils.ApiResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,7 +11,8 @@ import com.satyam.exceptions.CustomException;
 import com.satyam.model.Category;
 import com.satyam.repository.ICategoryRepository;
 import com.satyam.service.ICategoryService;
-import com.satyam.utils.CategoryResponse;
+
+import java.util.List;
 
 @Service
 public class CategoryServiceImpl implements ICategoryService {
@@ -25,43 +24,45 @@ public class CategoryServiceImpl implements ICategoryService {
     private ModelMapper modelMapper;
 
     @Override
-    public CategoryResponse getCategoryById(Integer id) {
+    public ApiResponse getCategoryById(Integer id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(
                         () -> new CustomException("Category not found with id " + id, HttpStatus.NOT_FOUND, false));
-        return modelMapper.map(category, CategoryResponse.class);
+        return new ApiResponse("success", 201, true, modelMapper.map(category, CategoryDto.class));
     }
 
     @Override
-    public List<CategoryResponse> getAllCategory() {
-        return categoryRepository
+    public ApiResponse getAllCategory() {
+        ApiResponse response = new ApiResponse("success", 200, true, null);
+        List<CategoryDto> categoryDtoList = categoryRepository
                 .findAll()
                 .stream()
-                .map((category) -> modelMapper.map(category, CategoryResponse.class))
-                .collect(Collectors.toList());
+                .map(category -> modelMapper.map(category, CategoryDto.class))
+                .toList();
+        response.setData(categoryDtoList);
+        return response;
     }
 
     @Override
-    public CategoryResponse deleteCategoryById(Integer id) {
+    public ApiResponse deleteCategoryById(Integer id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(
-                        () -> new CustomException("Category not found with id " + id, HttpStatus.NOT_FOUND, false));
+                .orElseThrow(() -> new CustomException("Category not found with id " + id, HttpStatus.NOT_FOUND, false));
         categoryRepository.delete(category);
-        return modelMapper.map(category, CategoryResponse.class);
+        return new ApiResponse("success", 201, true, modelMapper.map(category, CategoryDto.class));
     }
 
     @Override
-    public CategoryResponse updateCategory(CategoryDto categoryDto) {
+    public ApiResponse updateCategory(CategoryDto categoryDto) {
         categoryRepository.findById(categoryDto.getCategoryId())
                 .orElseThrow(() -> new CustomException("Category not found with id " + categoryDto.getCategoryId(),
                         HttpStatus.NOT_FOUND, false));
         Category updatedCategory = categoryRepository.save(modelMapper.map(categoryDto, Category.class));
-        return modelMapper.map(updatedCategory, CategoryResponse.class);
+        return new ApiResponse("success", 201, true, modelMapper.map(updatedCategory, CategoryDto.class));
     }
 
     @Override
-    public CategoryResponse createCategory(CategoryDto categoryDto) {
+    public ApiResponse createCategory(CategoryDto categoryDto) {
         Category savedCategory = categoryRepository.save(modelMapper.map(categoryDto, Category.class));
-        return modelMapper.map(savedCategory, CategoryResponse.class);
+        return new ApiResponse("success", 201, true, modelMapper.map(savedCategory, CategoryDto.class));
     }
 }

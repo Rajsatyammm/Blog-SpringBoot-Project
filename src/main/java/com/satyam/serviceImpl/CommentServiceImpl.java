@@ -1,8 +1,6 @@
 package com.satyam.serviceImpl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.satyam.utils.ApiResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +15,8 @@ import com.satyam.repository.ICommentRepository;
 import com.satyam.repository.IPostRepository;
 import com.satyam.repository.IUserRepository;
 import com.satyam.service.ICommentService;
-import com.satyam.utils.CommentResponse;
+
+import java.util.List;
 
 @Service
 public class CommentServiceImpl implements ICommentService {
@@ -35,7 +34,7 @@ public class CommentServiceImpl implements ICommentService {
     private ModelMapper modelMapper;
 
     @Override
-    public CommentResponse addComment(CommentDto commentDto, Integer userId, Integer postId) {
+    public ApiResponse addComment(CommentDto commentDto, Integer userId, Integer postId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException("User not found by id " + userId, HttpStatus.NOT_FOUND, false));
         Post post = postRepository.findById(postId)
@@ -44,27 +43,30 @@ public class CommentServiceImpl implements ICommentService {
         comment.setUser(user);
         comment.setPost(post);
         Comment savedComment = commentRepository.save(comment);
-        return modelMapper.map(savedComment, CommentResponse.class);
+        return new ApiResponse("success", 200, true, modelMapper.map(savedComment, CommentDto.class));
     }
 
     @Override
-    public List<CommentResponse> getAllCommentsOnPost(Integer postId) {
+    public ApiResponse getAllCommentsOnPost(Integer postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomException("Post not found by id " + postId, HttpStatus.NOT_FOUND, false));
-        return post.getCommentsList()
+        ApiResponse apiResponse = new ApiResponse("success", 200, true, null);
+        List<CommentDto> commentDtoList = post.getCommentsList()
                 .stream()
-                .map(comment -> modelMapper.map(comment, CommentResponse.class))
-                .collect(Collectors.toList());
+                .map(comment -> modelMapper.map(comment, CommentDto.class))
+                .toList();
+        apiResponse.setData(commentDtoList);
+        return apiResponse;
     }
 
     @Override
-    public CommentResponse deleteComment(Integer commentId) {
+    public ApiResponse deleteComment(Integer commentId) {
         Comment comment = commentRepository
                 .findById(commentId)
                 .orElseThrow(
                         () -> new CustomException("Comment not found by id " + commentId, HttpStatus.NOT_FOUND, false));
         commentRepository.delete(comment);
-        return modelMapper.map(comment, CommentResponse.class);
+        return new ApiResponse("success", 200, true, modelMapper.map(comment, CommentDto.class));
     }
 
 }

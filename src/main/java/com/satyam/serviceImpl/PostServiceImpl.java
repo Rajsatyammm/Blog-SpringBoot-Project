@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.satyam.utils.ApiResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,7 +25,6 @@ import com.satyam.repository.ICategoryRepository;
 import com.satyam.repository.IPostRepository;
 import com.satyam.repository.IUserRepository;
 import com.satyam.service.IPostService;
-import com.satyam.utils.PostResponse;
 import com.satyam.utils.PostsResponse;
 
 @Service
@@ -43,7 +43,7 @@ public class PostServiceImpl implements IPostService {
     private ModelMapper modelMapper;
 
     @Override
-    public PostResponse createPost(PostDto postDto, Integer userId, Integer categoryId, String imageUrl) {
+    public ApiResponse createPost(PostDto postDto, Integer userId, Integer categoryId, String imageUrl) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException("User not found with id " + userId, HttpStatus.NOT_FOUND,
                         false));
@@ -57,60 +57,66 @@ public class PostServiceImpl implements IPostService {
         post.setAddedAt(Date.valueOf(LocalDate.now()));
         post.setUpdatedAt(Date.valueOf(LocalDate.now()));
         Post createdPost = postRepository.save(post);
-        return modelMapper.map(createdPost, PostResponse.class);
+        return new ApiResponse("success", 201, true, modelMapper.map(createdPost, PostDto.class));
     }
 
     @Override
-    public PostResponse getPostsById(Integer postId) {
+    public ApiResponse getPostsById(Integer postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomException("Post not found with id " + postId,
                         HttpStatus.NOT_FOUND,
                         false));
-        return modelMapper.map(post, PostResponse.class);
+        return new ApiResponse("success", 200, true, modelMapper.map(post, PostDto.class));
     }
 
     @Override
-    public List<PostResponse> getAllPostsByUser(Integer userId) {
+    public ApiResponse getAllPostsByUser(Integer userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException("User not found with id " + userId,
                         HttpStatus.NOT_FOUND,
                         false));
-        return user
+        ApiResponse apiResponse = new ApiResponse("success", 200, true, null);
+        List<PostDto> postDto = user
                 .getUserPosts()
                 .stream()
-                .map(post -> modelMapper.map(post, PostResponse.class))
-                .collect(Collectors.toList());
+                .map(post -> modelMapper.map(post, PostDto.class))
+                .toList();
+        apiResponse.setData(postDto);
+        return apiResponse;
     }
 
     @Override
-    public List<PostResponse> getAllPostsByCategory(Integer categoryId) {
+    public ApiResponse getAllPostsByCategory(Integer categoryId) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CustomException("User not found with id " + categoryId, HttpStatus.NOT_FOUND,
                         false));
-        return category
+        ApiResponse apiResponse = new ApiResponse("success", 200, true, null);
+        List<PostDto> postDto = category
                 .getPosts()
                 .stream()
-                .map(post -> modelMapper.map(post, PostResponse.class))
-                .collect(Collectors.toList());
+                .map(post -> modelMapper.map(post, PostDto.class))
+                .toList();
+        apiResponse.setData(postDto);
+        return apiResponse;
     }
 
     @Override
-    public PostResponse deletePostById(Integer postId) {
+    public ApiResponse deletePostById(Integer postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomException("Post not found with id " + postId, HttpStatus.NOT_FOUND,
                         false));
         postRepository.delete(post);
-        return modelMapper.map(post, PostResponse.class);
+        return new ApiResponse("success", 201, true, modelMapper.map(post, PostDto.class));
     }
 
     @Override
-    public PostResponse updatePost(PostDto postDto) {
+    public ApiResponse updatePost(PostDto postDto) {
         postRepository.findById(postDto.getPostId())
                 .orElseThrow(() -> new CustomException("Post not found with id " + postDto.getPostId(),
                         HttpStatus.NOT_FOUND, false));
         postDto.setUpdatedAt(Date.valueOf(LocalDate.now()));
         Post updatedPost = postRepository.save(modelMapper.map(postDto, Post.class));
-        return modelMapper.map(updatedPost, PostResponse.class);
+        return new ApiResponse("success", 201, true, modelMapper.map(updatedPost, PostDto.class));
     }
 
     @Override
@@ -119,9 +125,9 @@ public class PostServiceImpl implements IPostService {
         Sort sort = asc ? Sort.by(Direction.ASC, sortBy) : Sort.by(Direction.DESC, sortBy);
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
         Page<Post> page = postRepository.findAll(pageable);
-        List<PostResponse> response = page.getContent()
+        List<PostDto> response = page.getContent()
                 .stream()
-                .map(post -> modelMapper.map(post, PostResponse.class))
+                .map(post -> modelMapper.map(post, PostDto.class))
                 .collect(Collectors.toList());
         PostsResponse postResponse = new PostsResponse();
         postResponse.setContent(response);
@@ -135,12 +141,15 @@ public class PostServiceImpl implements IPostService {
     }
 
     @Override
-    public List<PostResponse> searchPostsByTitle(String title) {
+    public ApiResponse searchPostsByTitle(String title) {
         List<Post> posts = postRepository.findByTitleContaining(title);
-        return posts
+        ApiResponse apiResponse = new ApiResponse("success", 200, true, null);
+        List<PostDto> postDto = posts
                 .stream()
-                .map(post -> modelMapper.map(post, PostResponse.class))
-                .collect(Collectors.toList());
+                .map(post -> modelMapper.map(post, PostDto.class))
+                .toList();
+        apiResponse.setData(postDto);
+        return apiResponse;
     }
 
 }
